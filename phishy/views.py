@@ -2,13 +2,26 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 MAPPINGS = {
-	'Uncle Drew':1210475,
-	'Game of Incest':977855,
-	'Camateur Hour':8,
-	'Protector of the Rim':13,
-	'JJ Nelson':17514,
-	'JJ Nelson Roster':20,
+	'Uncle Drew':'1210475',
+	'Game of Incest':'977855',
+	'Camateur Hour':'8',
+	'Protector of the Rim':'13',
+	'JJ Nelson':'17514',
+	'JJ Nelson Roster':'20',
 }
+ROSTER = {
+	'QB':'0',
+	'RB':'2',
+	'WR':'4',
+	'TE':'6',
+	'DP':'15',
+	'D/ST':'16',
+	'K':'17',
+	'BE':'20',
+	'IR':'21',
+	'FLEX':'23'
+}
+
 
 def index(request):
 	return HttpResponse("Hello World.")
@@ -32,7 +45,7 @@ def acceptTrade(request,
 			if("ontouchstart" in document.documentElement){\n\
 			document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
 			else{ \n\
-			//document.forms.acceptTradeForm.submit();\n\
+			document.forms.acceptTradeForm.submit();\n\
 			document.getElementById("header").innerHTML = "this is a desktop browser >:)";}\n })</script>'
 
 	html = '<html><form name="acceptTradeForm" enctype="application/x-www-form-urlencoded" method="POST" action="http://'+url+'">\
@@ -57,10 +70,11 @@ def dropPlayer(request,
 				week,
 				leagueId=MAPPINGS['Uncle Drew']):
 	url = "games.espn.com/ffl/clubhouse?leagueId="+leagueId+"&teamId="+victimTeamId+"&scoringPeriodId="+week
+	transaction = "3_{0}_{1}_-1_1002".format(str(victimPlayerId),str(victimPlayerRosterPosition))
 	html = '<form action="http://'+url+'" name="dropForm" method="POST" >\
       <input type="hidden" name="incoming" value="1" />\
       <input type="hidden" name="confirmed" value="1" />\
-      <input type="hidden" name="trans" value="3&#95;13994&#95;20&#95;&#45;1&#95;1002" />\
+      <input type="hidden" name="trans" value="'+transaction+'" />\
       <input type="hidden" name="confirmBtn" value="Confirm" />\
       <input type="submit" style="display:none" value="Form drop" />\
     </form>'
@@ -68,6 +82,6 @@ def dropPlayer(request,
 			if("ontouchstart" in document.documentElement){\n\
 			document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
 			else{ \n\
-			//document.forms.dropForm.submit();\n\
+			document.forms.dropForm.submit();\n\
 			document.getElementById("header").innerHTML = "not a touch screen, prime";}\n })</script>'
 	return HttpResponse(html+js)
