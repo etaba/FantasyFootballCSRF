@@ -70,7 +70,7 @@ def dropPlayer(request,
 				week,
 				leagueId=MAPPINGS['Uncle Drew']):
 	url = "games.espn.com/ffl/clubhouse?leagueId="+leagueId+"&teamId="+victimTeamId+"&scoringPeriodId="+week
-	transaction = "3_{0}_{1}_-1_1002".format(str(victimPlayerId),str(victimPlayerRosterPosition))
+	transaction = "3_{0}_{1}_{2}_-1_1002".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition))
 	html = '<form action="http://'+url+'" name="dropForm" method="POST" >\
       <input type="hidden" name="incoming" value="1" />\
       <input type="hidden" name="confirmed" value="1" />\
