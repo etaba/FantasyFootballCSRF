@@ -25,7 +25,7 @@ SECRET_KEY = 'o-*0fyd^g7k=wl1t9#1r(y&-f=1i*xi&9-*5bc%(s5*%ht63w@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.nfl-insider-news.com','.nfl-insider-news']
 
 
 # Application definition
