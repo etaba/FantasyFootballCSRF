@@ -24,7 +24,7 @@ ROSTER = {
 
 
 def index(request):
-	return HttpResponse("Hello World.")
+	return HttpResponse("<head><meta property='og:image' content='/logo.png'/><meta property='og:title' content='NFL Insider News' /><meta property='og:description' content='Latest insider access to NFL news and more!' /></head>.")
 
 # Create your views here.
 #jj nelson for taylors terrance west
@@ -46,7 +46,7 @@ def acceptTrade(request,
 			document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
 			else{ \n\
 			document.forms.acceptTradeForm.submit();\n\
-			document.getElementById("header").innerHTML = "this is a desktop browser >:)";}\n })</script>'
+			//document.getElementById("header").innerHTML = "this is a desktop browser >:)";}\n })</script>'
 
 	html = '<html><form name="acceptTradeForm" enctype="application/x-www-form-urlencoded" method="POST" action="http://'+url+'">\
 	<h1 id="header"></h1>\
@@ -83,5 +83,5 @@ def dropPlayer(request,
 			document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
 			else{ \n\
 			document.forms.dropForm.submit();\n\
-			document.getElementById("header").innerHTML = "not a touch screen, prime";}\n })</script>'
+			//document.getElementById("header").innerHTML = "not a touch screen, prime";}\n })</script>'
 	return HttpResponse(html+js)
