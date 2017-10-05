@@ -40,7 +40,7 @@ def acceptTrade(request,
 				sourcePlayerId=MAPPINGS['JJ Nelson'],
 				sourcePlayerRosterPosition=MAPPINGS['JJ Nelson Roster'],
 				leagueId=MAPPINGS['Uncle Drew']):
-	url = "games.espn.com/ffl/tradereview?leagueId="+leagueId+"&teamId=-2147483648&batchId=39"
+	url = "games.espn.com/ffl/tradereview?leagueId="+leagueId+"&teamId=-2147483648&batchId="+batchId
 	transaction = "4_{0}_{1}_{2}_{3}_20|4_{4}_{3}_{5}_{1}_20".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition),str(sourceTeamId),str(sourcePlayerId),str(sourcePlayerRosterPosition))
 	js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
 			if("ontouchstart" in document.documentElement){\n\
