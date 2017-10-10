@@ -1,0 +1,703 @@
+<html ng-app="myApp" ng-controller = "indexCtrl">
+{%verbatim%}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--Angular Bootstrap UI (used for audiocomplete)-->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <style>
+
+        *{
+             margin:0px auto;
+        }
+
+        form{
+             text-align:center;
+             width:400px;
+        }
+
+        input.ng-invalid {
+            background-color: pink;
+        }
+        input.ng-untouched {
+            background-color: white;
+        }
+        .invalid {
+            background-color: pink;
+        }
+
+    </style>
+</head>
+<div style="display: inline-block; text-align:left">
+    <h3>Drop a Player From Their Team</h3>
+        <h6>Instructions: Enter the values below to generate a url which will drop one of their players if they click on it. They must click the link from a computer that they have used in the past to login to espn, for example, during the draft. If they try to click on the link on their phone, they will get an error message which says it can only be loaded on a desktop, so you may leverage that excuse to get them to try it again on their computer. You can enter anything you want in the "decoy+text" portion of the URL (but use '+' instead of spaces), so use it wisely to lure them in, for example "cam+newton+lost+at+sea" </h6>
+
+        <form name="dropForm">
+        <div class="form-group">
+            <label for="teamURL">Their Team URL</label>
+            <input name="teamURL" required type="text" placeholder="Their Team URL" ng-model="entry.teamURL">
+        </div>
+
+        <div class="form-group">
+            <label for="player">Their Player</label>
+            <input name="player" required type="text" placeholder="Who we dropping?" ng-model="entry.player" uib-typeahead="player for player in playerArray|filter:$viewValue">
+        </div>
+
+        <div class="form-group">
+            <label for="rosterPosition">Current Roster Position</label>
+            <select name="rosterPosition" required ng-model="entry.rosterPosition" ng-options="key for (key,value) in rosterMap" id="rosterPosition" >
+                <option></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="decoyText">Title</label>
+            <input name="decoyText" type="text" placeholder="Clickbaity Title for your Link" ng-model="entry.decoyText">
+        </div>
+
+        <div class="form-group">
+            <button ng-click="generateDropLink(entry)">Generate Drop Link </button>
+        </div>
+        </form>
+</div>
+<div ng-if="errors" style="display:table" class="invalid">
+    <!--<div ng-show="dropForm.teamURL.$invalid">
+        Your Team URL required. This is the URL you see when you are on your own team homepage.
+    </div>
+    <div ng-show="dropForm.player.$invalid">
+        Player required. This is the player you want to drop from their team.
+    </div>
+    <div ng-show="dropForm.rosterPosition.$invalid">
+        Roster position required. This is the current lineup roster position of the player.
+    </div>-->
+    <div ng-show="badURL">
+        - Invalid Team URL. You need the URL you see in your browser when youre on the person's team page, ex: http://games.espn.com/ffl/clubhouse?leagueId=123456&teamId=13&seasonId=2017
+    </div>
+    <div ng-show="players[entry.player.properName()] == undefined">  
+        - Invalid player. Check spelling?
+    </div>
+</div>
+<br>
+<div ng-show="dropLink != undefined" style="background-color:yellow">
+    <h3>The Link</h3>
+    <p>{{ dropLink }}</p></div>
+<br><br><br>
+<div style="display:table">
+    <h3>Force them to Accept a Trade</h3>
+    <h6>Instructions: You'll need to propose the trade before you get them to click on this link. The link will cause them to accept your trade. If they cancel the trade before clicking the link, it won't work. Also, we need the ID of the trade. You can get it by "inspecting" the trade on espn: Right-click the trade from your team page and click "inspect". A bunch of ugly code should pop up on the side of your browser and you'll see an ID such as "batch45". That means 45 is the ID of the trade. Include it below. </h6>
+    <div ng-if="tradeFormErrors" style="display:table" class="invalid" >
+        <!--<div ng-show="dropForm.teamURL.$invalid">
+            Your Team URL required. This is the URL you see when you are on your own team homepage.
+        </div>
+        <div ng-show="dropForm.player.$invalid">
+            Player required. This is the player you want to drop from their team.
+        </div>
+        <div ng-show="dropForm.rosterPosition.$invalid">
+            Roster position required. This is the current lineup roster position of the player.
+        </div>-->
+        <div ng-show="badVictimURL">
+            - Invalid Team URL. You need the URL you see in your browser when youre on the person's team page, ex: http://games.espn.com/ffl/clubhouse?leagueId=123456&teamId=13&seasonId=2017
+        </div>
+        <div ng-show="badSourceURL">
+            - Invalid Team URL. You need the URL you see in your browser when youre on you're own team page, ex: http://games.espn.com/ffl/clubhouse?leagueId=123456&teamId=13&seasonId=2017
+        </div>
+        <div ng-show="players[tradeEntry.sourcePlayer.properName()] == undefined">  
+            - Invalid player {{ tradeEntry.sourcePlayer }}. Check spelling?
+        </div>
+        <div ng-show="players[tradeEntry.victimPlayer.properName()] == undefined">  
+            - Invalid player {{ tradeEntry.victimPlayer }}. Check spelling?
+        </div>
+        <div ng-show="badBatchId">  
+            - Invalid trade ID. Must be a number ex. 35
+        </div>
+    </div>
+    <div style="background-color:yellow" ng-show="tradeLink != undefined"><h3>The Link</h3><p>{{ tradeLink }}</p></div>
+    <br>
+    <form name="tradeForm">
+        <div class="form-group">
+            <label for="sourceTeamURL">Your Team URL</label>
+            <input name="sourceTeamURL" required type="text" placeholder="Your Team URL" ng-model="tradeEntry.sourceTeamURL"> 
+        </div>
+
+        <div class="form-group">
+            <label for="sourcePlayer">Your Player</label>
+            <input name="sourcePlayer" required type="text" placeholder="Who will you trade to them?" ng-model="tradeEntry.sourcePlayer" uib-typeahead="player for player in playerArray|filter:$viewValue">
+        </div>
+
+        <div class="form-group">
+            <label for="sourceRosterPosition">Your Player's Current Roster Position</label>
+            <select name="sourceRosterPosition" required ng-model="tradeEntry.sourceRosterPosition" ng-options="key for (key,value) in rosterMap" >
+                <option></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="victimTeamURL">Their Team URL</label>
+            <input name="victimTeamURL" required type="text" placeholder="Their Team URL" ng-model="tradeEntry.victimTeamURL">
+        </div>
+
+        <div class="form-group">
+            <label for="victimPlayer">Their Player</label>
+            <input name="victimPlayer" required type="text" placeholder="Who do you want from them?" ng-model="tradeEntry.victimPlayer" uib-typeahead="player for player in playerArray|filter:$viewValue">
+        </div>
+
+        <div class="form-group">
+            <label for="victimRosterPosition">Their Player's Current Roster Position</label>
+            <select name="victimRosterPosition" required ng-model="tradeEntry.victimRosterPosition" ng-options="key for (key,value) in rosterMap" >
+                <option></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="batchId">Trade ID</label>
+            <input name="batchId" required type="text" placeholder="Trade ID" ng-model="tradeEntry.batchId">
+        </div>
+
+        <div class="form-group">
+            <label for="decoyText">Title</label>
+            <input name="decoyText"  type="text" placeholder="Clickbaity Title for your Link" ng-model="tradeEntry.decoyText">
+        </div>
+
+        <button ng-click="generateTradeLink(tradeEntry)" >Generate Trade Link </button>
+    </form>
+</div>
+<br>
+
+
+{%endverbatim%}
+
+</html>
+<script>
+
+String.prototype.properName = function() {
+    this.trim()
+    parts = this.split(' ')
+    for (i=0;i<parts.length;i++){
+        parts[i] = parts[i].charAt(0).toUpperCase() + parts[i].slice(1)
+    }
+    return parts.join(" ")
+    //this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+}
+
+
+var app = angular.module('myApp', ['ngSanitize', 'ui.bootstrap']);
+
+//var playersJSON = {{ PLAYERS_JSON }}
+//var players = JSON.parse(playersJSON)
+
+
+
+app.controller('indexCtrl', ['$scope', function($scope) {
+    $scope.players = {
+        "Tyler Lockett":"17619",
+        "Deonte Thompson":"15503",
+        "Martavis Bryant":"16886",
+        "Eagles D/ST":"60021",
+        "Golden Tate":"13217",
+        "Jalston Fowler":"17516",
+        "Jeff Janis":"17137",
+        "Fozzy Whittaker":"15755",
+        "Tavon Austin":"15786",
+        "George Kittle":"18292",
+        "Stephen Hauschka":"11923",
+        "Aaron Rodgers":"8439",
+        "Logan Paulsen":"13726",
+        "Chris Johnson":"11258",
+        "Justin Tucker":"15683",
+        "Marcus Mariota":"17610",
+        "Trey Burton":"17195",
+        "Pierre Garcon":"11439",
+        "Buccaneers D/ST":"60027",
+        "Carson Palmer":"4459",
+        "Aldrick Rosas":"18165",
+        "Mike Tolbert":"11658",
+        "Derek Carrier":"15403",
+        "Quan Bray":"17561",
+        "Leonard Fournette":"18218",
+        "Derrick Henry":"17832",
+        "Laquon Treadwell":"17811",
+        "Blake Bell":"17490",
+        "Bengals D/ST":"60004",
+        "Marquise Goodwin":"15839",
+        "Ryan Mallett":"14037",
+        "Breshad Perriman":"17674",
+        "Jermaine Kearse":"15428",
+        "Marshawn Lynch":"10456",
+        "Phillip Dorsett":"17643",
+        "Sammy Watkins":"16725",
+        "Taywan Taylor":"18224",
+        "Kyle Rudolph":"14054",
+        "Evan Engram":"18382",
+        "De'Anthony Thomas":"16945",
+        "Anthony Fasano":"9639",
+        "Nick Foles":"14877",
+        "Tarik Cohen":"18171",
+        "Martellus Bennett":"11295",
+        "Nick Novak":"9329",
+        "Sam Bradford":"13197",
+        "Chris Ivory":"13587",
+        "EJ Manuel":"15803",
+        "Eddie Lacy":"15848",
+        "Keelan Cole":"18466",
+        "Paul Richardson":"16781",
+        "Kenjon Barner":"15921",
+        "Demetrius Harris":"17189",
+        "Dolphins D/ST":"60015",
+        "Clive Walford":"17475",
+        "Terrell Watson":"18029",
+        "Kellen Moore":"14882",
+        "Chris Conley":"17638",
+        "Jaelen Strong":"17709",
+        "Dwayne Allen":"14901",
+        "Dion Sims":"15974",
+        "Raheem Mostert":"17767",
+        "Kenyan Drake":"17856",
+        "Brandon LaFell":"12576",
+        "Pharoh Cooper":"17893",
+        "Robert Woods":"15880",
+        "Geoff Swaim":"17713",
+        "Cole Beasley":"15349",
+        "Cody Core":"17958",
+        "Julius Thomas":"14204",
+        "Connor Cook":"17877",
+        "Mike Evans":"16737",
+        "David Njoku":"18303",
+        "Travis Kelce":"15847",
+        "Case Keenum":"15168",
+        "Ka'imi Fairbairn":"18454",
+        "Ryan Fitzpatrick":"8664",
+        "Charles Clay":"14145",
+        "Drew Brees":"2580",
+        "Jake Rudock":"17952",
+        "C.J. Uzomah":"17564",
+        "Joe Mixon":"18193",
+        "Josh McCown":"3609",
+        "Marlon Mack":"18211",
+        "O.J. Howard":"18322",
+        "Kasen Williams":"18038",
+        "Nelson Agholor":"17668",
+        "Kai Forbath":"14816",
+        "Shayne Graham":"3504",
+        "Xavier Grimble":"18101",
+        "Jordan Howard":"17919",
+        "Russell Wilson":"14881",
+        "Luke McCown":"5631",
+        "Rashard Higgins":"17934",
+        "Harrison Butker":"18409",
+        "Brice Butler":"15896",
+        "Jalen Richard":"18079",
+        "Jimmy Garoppolo":"16760",
+        "Bruce Ellington":"16946",
+        "Lamar Miller":"14886",
+        "Lance Kendricks":"14007",
+        "Luke Willson":"16121",
+        "Hunter Henry":"17822",
+        "Jake Elliott":"18178",
+        "Jay Prosch":"17191",
+        "Dan Bailey":"14322",
+        "Chandler Catanzaro":"17169",
+        "Brandon Williams":"16313",
+        "Chris Hogan":"14402",
+        "Donte Moncrief":"16791",
+        "Bryce Petty":"17434",
+        "Josh Bellamy":"15555",
+        "Frank Gore":"8479",
+        "Dwayne Harris":"14100",
+        "Jacob Hollister":"18464",
+        "Jason Witten":"4527",
+        "Andre Ellington":"15893",
+        "Ted Ginn Jr.":"10453",
+        "Rams D/ST":"60014",
+        "Graham Gano":"12460",
+        "Theo Riddick":"15994",
+        "Corey Grant":"17752",
+        "Duke Johnson Jr.":"17658",
+        "Noah Brown":"18349",
+        "Albert Wilson":"17182",
+        "Javorius Allen":"17616",
+        "Kareem Hunt":"18225",
+        "Mitchell Trubisky":"18168",
+        "Tony Romo":"5209",
+        "Greg Zuerlein":"14993",
+        "Jarius Wright":"14918",
+        "Andre Holmes":"14403",
+        "Panthers D/ST":"60029",
+        "Le'Veon Bell":"15825",
+        "Brandon Tate":"12597",
+        "Randy Bullock":"15091",
+        "Cam Newton":"13994",
+        "Adam Shaheen":"18276",
+        "Jalin Marshall":"18077",
+        "Andre Johnson":"4461",
+        "49ers D/ST":"60025",
+        "LeGarrette Blount":"13213",
+        "Zach Ertz":"15835",
+        "Cardinals D/ST":"60022",
+        "Marqise Lee":"16787",
+        "Wendell Smallwood":"17921",
+        "Jaron Brown":"16172",
+        "Keenan Allen":"15818",
+        "Devin Funchess":"17682",
+        "Alvin Kamara":"18187",
+        "Richard Rodgers":"16786",
+        "Darren Fells":"17187",
+        "Jay Ajayi":"17556",
+        "Ravens D/ST":"60033",
+        "Alex Erickson":"18058",
+        "Chris Manhertz":"17549",
+        "Vance McDonald":"15853",
+        "Nick O'Leary":"17604",
+        "Sean Mannion":"17533",
+        "Trent Taylor":"18296",
+        "Ed Dickson":"13272",
+        "Zach Miller":"12699",
+        "Bears D/ST":"60003",
+        "Mike Glennon":"15837",
+        "Ryan Griffin":"15887",
+        "Tom Brady":"2330",
+        "Doug Baldwin":"14221",
+        "Derek Watt":"17957",
+        "Patrick Mahomes II":"18210",
+        "Doug Martin":"14885",
+        "Zane Gonzalez":"18327",
+        "A.J. Green":"13983",
+        "Gerald Everett":"18374",
+        "Isaiah McKenzie":"18304",
+        "Antonio Brown":"13934",
+        "Tom Savage":"16943",
+        "Raiders D/ST":"60013",
+        "Damien Williams":"17138",
+        "Patriots D/ST":"60017",
+        "Jared Abbrederis":"16836",
+        "Vikings D/ST":"60016",
+        "Will Fuller V":"17809",
+        "Adam Thielen":"17178",
+        "David Morgan II":"17949",
+        "Giants D/ST":"60019",
+        "Orleans Darkwa":"17208",
+        "Cordarrelle Patterson":"15807",
+        "Seth Roberts":"17761",
+        "Jordan Todman":"14186",
+        "Shane Vereen":"14017",
+        "Ryan Succop":"12731",
+        "Geno Smith":"15864",
+        "Michael Floyd":"14908",
+        "Robert Turbin":"14894",
+        "J.D. McKissic":"18463",
+        "Christian McCaffrey":"18279",
+        "Michael Roberts":"18227",
+        "Jordan Leggett":"18232",
+        "DeShone Kizer":"18328",
+        "Kamar Aiken":"14583",
+        "Matt Bryant":"4333",
+        "Jacoby Brissett":"17870",
+        "Seahawks D/ST":"60026",
+        "Larry Fitzgerald":"5528",
+        "Amara Darboh":"18201",
+        "Kevin Hogan":"17927",
+        "Philip Rivers":"5529",
+        "Leonte Carroo":"17865",
+        "Dez Bryant":"13215",
+        "Kellen Clemens":"9635",
+        "Eric Tomlinson":"18153",
+        "Carson Wentz":"17795",
+        "James Conner":"18236",
+        "Ifeanyi Momah":"15775",
+        "Chris Matthews":"17734",
+        "Derek Anderson":"8627",
+        "ArDarius Stewart":"18188",
+        "Marcus Johnson":"18429",
+        "Anquan Boldin":"4512",
+        "Eric Decker":"13271",
+        "Garrett Celek":"15204",
+        "Jamison Crowder":"17600",
+        "Markus Wheaton":"15873",
+        "Matt Moore":"11128",
+        "Russell Shepard":"16227",
+        "Marcedes Lewis":"9614",
+        "Lions D/ST":"60008",
+        "Jarvis Landry":"16790",
+        "Darrell Daniels":"18492",
+        "Travis Benjamin":"15062",
+        "C.J. Beathard":"18268",
+        "Phillip Supernaw":"15257",
+        "Jeremy Maclin":"12579",
+        "Adam Humphries":"17756",
+        "Chad Williams":"18169",
+        "Michael Burton":"17502",
+        "Billy Cundiff":"4245",
+        "Tanner McEvoy":"18082",
+        "Corey Clement":"18425",
+        "Zach Zenner":"17741",
+        "David Fluellen":"18461",
+        "Elijah McGuire":"18313",
+        "Stephen Gostkowski":"9704",
+        "Jameis Winston":"17399",
+        "Tyreek Hill":"17929",
+        "Rishard Matthews":"15102",
+        "Mason Crosby":"10636",
+        "Mack Hollins":"18350",
+        "Nick Boyle":"17567",
+        "Dion Lewis":"14198",
+        "J.J. Nelson":"17514",
+        "Eli Manning":"5526",
+        "Brandin Cooks":"16731",
+        "Sammie Coates":"17562",
+        "Matthew Stafford":"12483",
+        "Matt Prater":"11122",
+        "Ryan Switzer":"18287",
+        "Terrance Williams":"15878",
+        "Kenny Stills":"16016",
+        "Troy Niklas":"16797",
+        "Bilal Powell":"14129",
+        "Alfred Morris":"15009",
+        "Trey Edmunds":"18487",
+        "Rod Smith":"17781",
+        "Bernard Reedy":"18053",
+        "Antonio Gates":"5362",
+        "Josh Brown":"4680",
+        "Blair Walsh":"15058",
+        "Curtis Samuel":"18284",
+        "Marvin Jones Jr.":"15072",
+        "Tyrod Taylor":"14163",
+        "Kelvin Benjamin":"16730",
+        "Bills D/ST":"60002",
+        "Aaron Jones":"18314",
+        "D'Onta Foreman":"18196",
+        "Austin Ekeler":"18458",
+        "DeMarco Murray":"14005",
+        "Jerell Adams":"17945",
+        "Jared Goff":"17794",
+        "Trevor Davis":"17928",
+        "Phil Dawson":"1440",
+        "Tyler Kroft":"17650",
+        "Anthony Sherman":"14135",
+        "Nathan Peterman":"18252",
+        "Jay Cutler":"9597",
+        "Jeremy Kerley":"14151",
+        "Dontrelle Inman":"17136",
+        "Chad Henne":"11291",
+        "AJ McCarron":"16810",
+        "T.Y. Hilton":"14924",
+        "Rhett Ellison":"15003",
+        "Adam Vinatieri":"1097",
+        "Matt Breida":"18424",
+        "Jakeem Grant":"17947",
+        "James Hanna":"14906",
+        "Taylor Gabriel":"17177",
+        "Torrey Smith":"14032",
+        "Roger Lewis":"18047",
+        "Nick Folk":"10621",
+        "Chris Thompson":"15966",
+        "Titans D/ST":"60010",
+        "Geronimo Allison":"18110",
+        "Randall Telfer":"17450",
+        "Brett Hundley":"17613",
+        "Kyle Juszczyk":"16002",
+        "Travaris Cadet":"15457",
+        "Cody Parkey":"17173",
+        "Tyler Boyd":"17840",
+        "Benjamin Watson":"5557",
+        "Dak Prescott":"17907",
+        "Jeremy Hill":"16803",
+        "Brandon Marshall":"9705",
+        "Odell Beckham Jr.":"16733",
+        "Alex Smith":"8416",
+        "Justin Hunter":"15845",
+        "Ezekiel Elliott":"17797",
+        "Ross Travis":"18098",
+        "Ricardo Louis":"17890",
+        "Drew Stanton":"10487",
+        "Charcandrick West":"17384",
+        "Tyrell Williams":"17762",
+        "Thomas Rawls":"17739",
+        "Texans D/ST":"60034",
+        "Jonnu Smith":"18183",
+        "Jaguars D/ST":"60030",
+        "Lee Smith":"14215",
+        "Charles Sims":"16749",
+        "Jerick McKinnon":"16782",
+        "Brent Celek":"10605",
+        "C.J. Ham":"18486",
+        "Ben Koyack":"17645",
+        "Robbie Gould":"9354",
+        "Kendall Wright":"14909",
+        "DeSean Jackson":"11283",
+        "Alex Collins":"17933",
+        "Seth DeValve":"17910",
+        "Malcolm Brown":"17742",
+        "Austin Davis":"15187",
+        "Amari Cooper":"17677",
+        "Sterling Shepard":"17827",
+        "Alshon Jeffery":"14912",
+        "Brian Hoyer":"12477",
+        "LeSean McCoy":"12514",
+        "Danny Amendola":"11674",
+        "Jermaine Gresham":"13228",
+        "Matthew Dayes":"18376",
+        "Tyler Higbee":"17886",
+        "Branden Oliver":"17143",
+        "James O'Shaughnessy":"17441",
+        "Jason Myers":"17438",
+        "Stephen Anderson":"18027",
+        "Zay Jones":"18223",
+        "Kellen Winslow":"5531",
+        "Ameer Abdullah":"17580",
+        "Eric Weems":"10770",
+        "Steelers D/ST":"60023",
+        "Melvin Gordon":"17586",
+        "Cameron Brate":"17784",
+        "Andre Roberts":"13226",
+        "Mike Gillislee":"15952",
+        "Chiefs D/ST":"60012",
+        "Jared Cook":"12537",
+        "Landry Jones":"15904",
+        "JuJu Smith-Schuster":"18306",
+        "Nick Vannett":"17873",
+        "Scott Tolzien":"14353",
+        "Mike Vick":"2549",
+        "Tommylee Lewis":"18100",
+        "Luke Stocker":"14099",
+        "Jamaal Williams":"18362",
+        "Isaiah Crowell":"17133",
+        "MarQueis Gray":"16323",
+        "Todd Gurley":"17683",
+        "Cody Latimer":"16793",
+        "Jesse James":"17690",
+        "Giovani Bernard":"15826",
+        "Michael Crabtree":"12563",
+        "James White":"16913",
+        "Arrelious Benn":"13218",
+        "Aldrick Robinson":"14164",
+        "Terrance West":"16783",
+        "Austin Seferian-Jenkins":"16795",
+        "Justin Hardy":"17542",
+        "Jets D/ST":"60020",
+        "Connor Barth":"11737",
+        "Jimmy Graham":"13232",
+        "Packers D/ST":"60009",
+        "Cowboys D/ST":"60006",
+        "Chris Godwin":"18272",
+        "Wayne Gallman":"18233",
+        "Jonathan Stewart":"11247",
+        "Shaun Hill":"4260",
+        "Chargers D/ST":"60024",
+        "Chris Boswell":"17175",
+        "Browns D/ST":"60005",
+        "Devante Mays":"18340",
+        "Steve Smith Sr.":"2622",
+        "DeVante Parker":"17593",
+        "DeAndre Hopkins":"15795",
+        "Andy Dalton":"14012",
+        "Jerricho Cotchery":"5633",
+        "Demarcus Robinson":"17900",
+        "Patrick DiMarco":"14332",
+        "Peyton Barber":"18106",
+        "Aaron Ripkowski":"17626",
+        "Carlos Hyde":"16777",
+        "Randall Cobb":"14053",
+        "Kaelin Clay":"17530",
+        "Cooper Kupp":"18415",
+        "Latavius Murray":"15920",
+        "John Brown":"16804",
+        "Eric Ebron":"16732",
+        "Jordy Nelson":"11270",
+        "Blake Bortles":"16724",
+        "Delanie Walker":"9761",
+        "Mike Wallace":"12601",
+        "Sebastian Janikowski":"2148",
+        "Sean McGrath":"15515",
+        "Tommy Bohanon":"15973",
+        "Jacquizz Rodgers":"14193",
+        "Colts D/ST":"60011",
+        "Kerwynn Williams":"16024",
+        "Ben Roethlisberger":"5536",
+        "Alfred Blue":"17134",
+        "Michael Campanaro":"17148",
+        "Deshaun Watson":"18246",
+        "Matt Schaub":"5615",
+        "Matt Cassel":"8644",
+        "Robby Anderson":"18097",
+        "Dwayne Washington":"17989",
+        "Giorgio Tavecchio":"15245",
+        "Stefon Diggs":"17676",
+        "TJ Jones":"17192",
+        "DeAndre Washington":"17915",
+        "Allen Hurns":"17163",
+        "Joe Flacco":"11252",
+        "Darrius Heyward-Bey":"12570",
+        "Steven Jackson":"5549",
+        "James Develin":"13940",
+        "Jamize Olawale":"15653",
+    }
+    $scope.rosterMap = {
+        'QB':'0',
+        'RB':'2',
+        'WR':'4',
+        'TE':'6',
+        'DP':'15',
+        'D/ST':'16',
+        'K':'17',
+        'BE':'20',
+        'IR':'21',
+        'FLEX':'23'
+    }
+    $scope.playerArray = Object.keys($scope.players)
+
+    getURLParam = function(url,param){
+        var start = url.indexOf(param) + param.length + 1;
+        var end = url.indexOf('&',start);
+        if (start < 0 || end < 0){
+            return false
+        }
+        return url.substring(start,end)
+    }
+    $scope.generateDropLink = function(entry){
+        teamId = getURLParam(entry.teamURL,"teamId");
+        leagueId = getURLParam(entry.teamURL,"leagueId");
+        playerId = $scope.players[entry.player.properName()];
+        decoyText = (entry.decoyText == undefined || entry.decoyText == "") ? "0" : entry.decoyText.split(" ").join("+")
+
+
+        $scope.badURL = (!teamId || !leagueId) ? true : false
+        $scope.badPlayer = (playerId == undefined) ? true : false
+        $scope.errors = (dropForm.$invalid || $scope.badURL || $scope.badPlayer || entry.rosterPosition==undefined) ? true : false
+
+        $scope.dropLink = $scope.errors ? undefined : "www.nfl-insider-news.com/d/"+decoyText+ "/"+teamId+"/"+playerId+"/"+entry.rosterPosition+"/"+leagueId
+    }
+
+    $scope.generateTradeLink = function(entry){
+        sourceTeamId = getURLParam(entry.sourceTeamURL,"teamId");
+        victimTeamId = getURLParam(entry.victimTeamURL,"teamId");
+        leagueId = getURLParam(entry.sourceTeamURL,"leagueId");
+        victimPlayerId = $scope.players[entry.victimPlayer];   
+        sourcePlayerId = $scope.players[entry.sourcePlayer];
+        decoyText = (entry.decoyText == undefined) ? "0" : entry.decoyText.split(" ").join("+")
+
+        $scope.badSourceURL = (!sourceTeamId || !leagueId) ? true : false
+        $scope.badVictimURL = !victimTeamId ? true : false
+        $scope.badVictimPlayer = (victimPlayerId == undefined) ? true : false
+        $scope.badSourcePlayer = (sourcePlayerId == undefined) ? true : false
+        $scope.badBatchId = isNaN(entry.batchId)
+        $scope.tradeFormErrors = (tradeForm.$invalid || $scope.badSourceURL || $scope.badBatchId || $scope.badVictimURL || $scope.badVictimPlayer || $scope.badSourcePlayer || entry.victimRosterPosition==undefined || entry.sourceRosterPosition==undefined) ? true : false
+        if ($scope.tradeFormErrors){
+
+            $scope.tradeLink = undefined
+        }
+        else{
+            $scope.tradeLink = "www.nfl-insider-news.com/at/"+decoyText+ "/"+entry.batchId+"/"+victimTeamId+"/"+victimPlayerId+"/"+entry.victimRosterPosition+"/"+sourceTeamId+"/"+sourcePlayerId+"/"+entry.sourceRosterPosition+"/"+leagueId
+        }
+    }
+}]);
+
+</script>
