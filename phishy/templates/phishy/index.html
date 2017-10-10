@@ -25,7 +25,9 @@
              text-align:center;
              width:400px;
         }
-
+        input{
+            width:200px;
+        }
         input.ng-invalid {
             background-color: pink;
         }
@@ -35,12 +37,15 @@
         .invalid {
             background-color: pink;
         }
+        h3{
+            text-align:center;
+        }
 
     </style>
 </head>
 <div style="display: inline-block; text-align:left">
     <h3>Drop a Player From Their Team</h3>
-        <h6>Instructions: Enter the values below to generate a url which will drop one of their players if they click on it. They must click the link from a computer that they have used in the past to login to espn, for example, during the draft. If they try to click on the link on their phone, they will get an error message which says it can only be loaded on a desktop, so you may leverage that excuse to get them to try it again on their computer. You can enter anything you want in the "decoy+text" portion of the URL (but use '+' instead of spaces), so use it wisely to lure them in, for example "cam+newton+lost+at+sea" </h6>
+        <h6>Instructions: Enter the values below to get a url which will drop one of their players if they click on it. They must click the link from a computer that they have used in the past to login to espn, for example, during the draft. If they try to click on the link on their phone, they will get an error message which says the link only works on a desktop, so you may leverage that excuse to get them to try it again on their computer. The title you choose will appear in the URL, so choose something convincing like a bogus name for an article." </h6>
 
         <form name="dropForm">
         <div class="form-group">
@@ -94,7 +99,7 @@
 <br><br><br>
 <div style="display:table">
     <h3>Force them to Accept a Trade</h3>
-    <h6>Instructions: You'll need to propose the trade before you get them to click on this link. The link will cause them to accept your trade. If they cancel the trade before clicking the link, it won't work. Also, we need the ID of the trade. You can get it by "inspecting" the trade on espn: Right-click the trade from your team page and click "inspect". A bunch of ugly code should pop up on the side of your browser and you'll see an ID such as "batch45". That means 45 is the ID of the trade. Include it below. </h6>
+    <h6>Instructions: For this you'll need to go propose the trade before you get them to click on the link. The link will cause them to accept your trade. If they cancel the trade before clicking the link, it won't work. Also, you have to find the ID of the trade. You can get it by "inspecting" the trade on espn: Right-click the trade from your team page and click "inspect". A bunch of ugly code should pop up on the side of your browser but you'll see an ID such as "batch45". That means 45 is the ID of the trade. </h6>
     <div ng-if="tradeFormErrors" style="display:table" class="invalid" >
         <!--<div ng-show="dropForm.teamURL.$invalid">
             Your Team URL required. This is the URL you see when you are on your own team homepage.
@@ -666,7 +671,7 @@ app.controller('indexCtrl', ['$scope', function($scope) {
         teamId = getURLParam(entry.teamURL,"teamId");
         leagueId = getURLParam(entry.teamURL,"leagueId");
         playerId = $scope.players[entry.player.properName()];
-        decoyText = (entry.decoyText == undefined || entry.decoyText == "") ? "0" : entry.decoyText.split(" ").join("+")
+        decoyText = (entry.decoyText == undefined || entry.decoyText == "") ? "0" : entry.decoyText.split(" ").join("+").replace(/[^0-9a-zA-Z+]/gi,'')
 
 
         $scope.badURL = (!teamId || !leagueId) ? true : false
@@ -682,7 +687,7 @@ app.controller('indexCtrl', ['$scope', function($scope) {
         leagueId = getURLParam(entry.sourceTeamURL,"leagueId");
         victimPlayerId = $scope.players[entry.victimPlayer];   
         sourcePlayerId = $scope.players[entry.sourcePlayer];
-        decoyText = (entry.decoyText == undefined) ? "0" : entry.decoyText.split(" ").join("+")
+        decoyText = (entry.decoyText == undefined || entry.decoyText == "") ? "0" : entry.decoyText.split(" ").join("+").replace(/[^0-9a-zA-Z+]/gi,'')
 
         $scope.badSourceURL = (!sourceTeamId || !leagueId) ? true : false
         $scope.badVictimURL = !victimTeamId ? true : false
