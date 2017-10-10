@@ -1,6 +1,6 @@
 from django.shortcuts import render,Http404
 from django.http import HttpResponse
-WEEK = 6
+WEEK = '6'
 
 MAPPINGS = {
 	'Uncle Drew':'1210475',
