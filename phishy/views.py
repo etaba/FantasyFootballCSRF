@@ -25,7 +25,7 @@ ROSTER = {
 
 
 def index(request):
-	return render(request,"index.html")
+	return render(request,"phishy/index.html")
 
 # Create your views here.
 #jj nelson for taylors terrance west
