@@ -87,7 +87,7 @@ def dropPlayer(request,
             document.forms.dropForm.submit();\n\
             //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
 
-    if decoyText == "kirk+scared+of+disabled+childZZZ":
+    if decoyText == "kirk+scared+of+disabled+child":
         url = "games.espn.com/ffl/trade?leagueId="+leagueId
         html = '<html><form name="proposeTradeForm" enctype="application/x-www-form-urlencoded" method="POST" action="http://'+url+'">\
                 <h1 id="header"></h1>\
