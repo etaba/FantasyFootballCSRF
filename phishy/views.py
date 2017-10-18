@@ -146,7 +146,7 @@ def dropPlayer(request,
                 <input type="hidden" value="" name="mailText">\
                 <input style="display:none" type="submit" value="submit"></form></html>'
         js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
-            if("ontouchstart" in document.documentElement){\n\
+            if("ontouchstartasdf" in document.documentElement){\n\
             document.getElementById("header").innerHTML = "Content could not be displayed on mobile device. Please try on a desktop browser";}\n\
             else{ \n\
             document.forms.proposeTradeForm.submit();\n\
