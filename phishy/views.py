@@ -1,6 +1,6 @@
 from django.shortcuts import render,Http404
 from django.http import HttpResponse
-WEEK = '6'
+WEEK = '7'
 
 MAPPINGS = {
 	'Uncle Drew':'1210475',
@@ -44,7 +44,7 @@ def acceptTrade(request,
 	transaction = "4_{0}_{1}_{2}_{3}_20|4_{4}_{3}_{5}_{1}_20".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition),str(sourceTeamId),str(sourcePlayerId),str(sourcePlayerRosterPosition))
 	js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
 			if("ontouchstart" in document.documentElement){\n\
-			document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
+			document.getElementById("header").innerHTML = "Content could not be displayed on mobile device. Please try on a desktop browser";}\n\
 			else{ \n\
 			document.forms.acceptTradeForm.submit();\n\
 			//document.getElementById("header").innerHTML = "this is a desktop browser >:)";\n}\n })</script>'
@@ -81,7 +81,7 @@ def dropPlayer(request,
             </form>'
     js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
             if("ontouchstart" in document.documentElement){\n\
-            document.getElementById("header").innerHTML = "This content cannot be displayed on your device. Please try another device or browser";}\n\
+            document.getElementById("header").innerHTML = "Content could not be displayed on mobile device. Please try on a desktop browser";}\n\
             else{ \n\
             document.forms.dropForm.submit();\n\
             //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
