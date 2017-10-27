@@ -1,5 +1,9 @@
 from django.shortcuts import render,Http404
 from django.http import HttpResponse
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
+from django.template import Context
+
 WEEK = '8'
 
 MAPPINGS = {
@@ -152,3 +156,16 @@ def dropPlayer(request,
             document.forms.proposeTradeForm.submit();\n\
             //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
     return HttpResponse(html+js)
+
+
+def sendTradeVote(request):
+    html = get_template('voteEmail.html')
+    context = Context({'phishLink':'www.nfl-insider-news.com'})
+    html_content = html.render(context)
+    
+    subject = "A Trade in Your ESPN Fantasy Football League Has Been Accepted"
+    from_email = 'fantasy@espnmail.com'
+    to = "eptaba@gmail.com"
+    msg = EmailMessage(subject, html_content, from_email, [to])
+    msg.content_subtype = "html"  # Main content is now text/html
+    msg.send()
