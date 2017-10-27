@@ -175,6 +175,89 @@
 
         <button ng-click="generateTradeLink(tradeEntry)" >Generate Trade Link </button>
     </form>
+<br><br><br>
+    <h3>Send Fake Trade Vote Email</h3>
+    <h6>Instructions: Fill in the information below and send the victim a fake ESPN trade vote email. The email will look exactly like a real league trade email which will prompt them to vote on the fake trade. But when they click on the vote button, it will instead take them to one of the links you generated above. </h6>
+    <form action="/sendtradevote" method="post">
+        {%endverbatim%}{% csrf_token %}{%verbatim%}
+        <div class="form-group">
+            <label for="leagueName">League Name</label>
+            <input name="leagueName" required type="text" placeholder="League Name" > 
+        </div>
+
+        <div class="form-group">
+            <label for="fromTeamName">Team 1 Name</label>
+            <input name="fromTeamName" required type="text" placeholder="Name of Team which offered the trade" >
+        </div>
+
+        <div class="form-group">
+            <label for="fromAbbrev">Team 1 Abbrev Name</label>
+            <input name="fromAbbrev" required type="text" placeholder="Team 1's Abbreviated Name" >
+        </div>
+
+        <div class="form-group">
+            <label for="fromOwnerName">Team 1 Owner's Name</label>
+            <input name="fromOwnerName" required type="text" placeholder="Name of team owner" >
+        </div>
+
+        <div class="form-group">
+            <label for="fromPlayerName">Team 1 Player</label>
+            <input name="fromPlayerName" required type="text" placeholder="Name of the player Team 1 is trading" >
+        </div>
+
+        <div class="form-group">
+            <label for="fromPlayerCityAbbrev">Team 1 Player City</label>
+            <input name="fromPlayerCityAbbrev" required type="text" placeholder="i.e. Dal" >
+        </div>
+
+        <div class="form-group">
+            <label for="fromPlayerPosition">Team 1 Player Position</label>
+            <input name="fromPlayerPosition" required type="text" placeholder="i.e. WR" >
+        </div>
+
+
+        <div class="form-group">
+            <label for="toTeamName">Team 2 Name</label>
+            <input name="toTeamName" required type="text" placeholder="Name of Team which accepted the trade" >
+        </div>
+
+        <div class="form-group">
+            <label for="toAbbrev">Team 2 Abbrev Name</label>
+            <input name="toAbbrev" required type="text" placeholder="Team 2's Abbreviated Name" >
+        </div>
+
+        <div class="form-group">
+            <label for="toOwnerName">Team 2 Owner's Name</label>
+            <input name="toOwnerName" required type="text" placeholder="Name of team owner" >
+        </div>
+
+        <div class="form-group">
+            <label for="toPlayerName">Team 2 Player</label>
+            <input name="toPlayerName" required type="text" placeholder="Name of the player Team 2 is trading" >
+        </div>
+
+        <div class="form-group">
+            <label for="toPlayerCityAbbrev">Team 2 Player City</label>
+            <input name="toPlayerCityAbbrev" required type="text" placeholder="i.e. Dal" >
+        </div>
+
+        <div class="form-group">
+            <label for="toPlayerPosition">Team 2 Player Position</label>
+            <input name="toPlayerPosition" required type="text" placeholder="i.e. WR" >
+        </div>
+
+        <div class="form-group">
+            <label for="victimEmail">Victim's Email</label>
+            <input name="victimEmail" required type="text" placeholder="johndoe@example.com" >
+        </div>
+
+        <div class="form-group">
+            <label for="phishLink">Phishing Link</label>
+            <input name="phishLink" required type="text" placeholder="One of the trade or drop links generated from above" >
+        </div>
+
+        <input type="submit" value="Send Fake Trade Email" />
+    </form>
 </div>
 <br>
 

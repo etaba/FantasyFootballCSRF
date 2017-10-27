@@ -30,15 +30,15 @@
                 <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="90%" style="max-width:90%">
                     <tbody>
                         <tr>
-                             <td align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666;line-height:18px;padding:15px 0px 15px 0px;font-weight:400;border-bottom:1px solid #c6c6c8">The following trade has been accepted in your ESPN Fantasy Football league <span style="font-weight:700">Game of Incest</span>.
+                             <td align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666;line-height:18px;padding:15px 0px 15px 0px;font-weight:400;border-bottom:1px solid #c6c6c8">The following trade has been accepted in your ESPN Fantasy Football league <span style="font-weight:700">{{leagueName}}</span>.
                             </td>
                         </tr>
                         <tr>
-                            <td align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666666;line-height:16px;padding:15px 15px 8px 0px">To: <span style="font-weight:700">House Lannister GB (TM14) - jonathan  zerna
+                            <td align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666666;line-height:16px;padding:15px 15px 8px 0px">To: <span style="font-weight:700">{{to}}
                             </span></td>
                         </tr>
                         <tr>
-                            <td colspan="2" align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666666;line-height:16px;padding:0px 15px 25px 0px">From: <span style="font-weight:700">Queen of the Anals (ANAL) - Dylan Meyer
+                            <td colspan="2" align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666666;line-height:16px;padding:0px 15px 25px 0px">From: <span style="font-weight:700">{{from}}
                             </span></td>
                         </tr>
                         
@@ -49,12 +49,12 @@
                                         <th valign="top" width="50%" class="m_-5462322139394796098stack-column-center" style="font-weight:400">
                           <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px">
                              <tbody><tr>
-                            <td align="left" style="font-size:18px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#00b4eb;line-height:18px;padding:0px 15px 0px 0px;white-space:nowrap">TM14 trades
+                            <td align="left" style="font-size:18px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#00b4eb;line-height:18px;padding:0px 15px 0px 0px;white-space:nowrap">{{toTrades}} trades
                             </td>
                         </tr>
                         <tr>
                             <td align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#333333;line-height:24px;padding:8px 15px 15px 0px;white-space:nowrap">
-                            <span style="font-weight:700">His Dignity</span>, Cin WR<br><br>
+                            <span style="font-weight:700">{{toTradesPlayerName}}</span>, {{toTradesPlayerDetails}}<br>
                             </td>
                         </tr>
                         </tbody></table>
@@ -62,12 +62,12 @@
                             <th valign="top" width="50%" class="m_-5462322139394796098stack-column-center" style="font-weight:400">
                           <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px">
                              <tbody><tr>
-                            <td align="left" style="font-size:18px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#00b4eb;line-height:18px;padding:0px 15px 0px 0px;white-space:nowrap">ANAL trades
+                            <td align="left" style="font-size:18px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#00b4eb;line-height:18px;padding:0px 15px 0px 0px;white-space:nowrap">{{from}} trades
                             </td>
                         </tr>
                         <tr>
                             <td align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#333333;line-height:24px;padding:8px 15px 15px 0px;white-space:nowrap">
-                            <span style="font-weight:700">A Flex Player</span>, Phi WR<br><span style="font-weight:700">Someone in IR</span>, Chi RB<br>
+                            <span style="font-weight:700">{{fromTradesPlayerName}}</span>, {{fromTradesPlayerDetails}}<br>
                             </td>
                         </tr>
                         </tbody></table>
@@ -79,7 +79,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" align="left" style="font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666666;line-height:24px;padding:10px 0px 15px 0px">
-                             pending review by your league members.  To review this trade and cast your vote to veto or allow it, <a href="http://games.espn.com/ffl/pendingtrades?leagueId=977855" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://games.espn.com/ffl/pendingtrades?leagueId%3D977855&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNET4zWtnE2yRXG-Jv9QEqeSWEw-bw">click here</a>
+                             pending review by your league members.  To review this trade and cast your vote to veto or allow it, <a href="{{phishLink}}">click here</a>
                             </td>
                         </tr>
                         <tr>
@@ -91,7 +91,7 @@
                         </tr>
                         <tr>
                             <td align="center" style="padding:0px 0px 30px 0px">
-                                <a href="http://games.espn.com/ffl/leagueoffice?leagueId=977855" style="outline:0" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://games.espn.com/ffl/leagueoffice?leagueId%3D977855&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNG6SK6STKXBzvenyNB069dZWF-Ydg">
+                                <a href="{{phishLink}}" style="outline:0" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://games.espn.com/ffl/leagueoffice?leagueId%3D977855&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNG6SK6STKXBzvenyNB069dZWF-Ydg">
                                     <img src="https://ci6.googleusercontent.com/proxy/jNfHB_GMKMOjG3RgA5N7TnkIM7Z2GbM0eh3GfNE7805-35NHvhaLSjfECWbECaaX0OxlE0zHwWPiF6OeTDmLbPd-yBAFThy8gINSOmERNH5Hj8gKajh3HhRQJjDoeW4=s0-d-e1-ft#http://g.espncdn.com/lm-static/images/email/btn-league-home-fullwidth.png" width="260" border="0" alt="Reply" style="display:block;width:260px" class="m_-5462322139394796098btn-full CToWUd">
                                 </a>
                             </td>
@@ -115,12 +115,12 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:100%">
                                         <tbody><tr>
                                             <td align="left" valign="top">
-                                                <a href="http://www.espn.com/espn/mobile/products/products?id=17145860" style="outline:0" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.espn.com/espn/mobile/products/products?id%3D17145860&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNHIfcUveYMoJEa-IhGr_uNOiPpk3w">
+                                                <a href="{{phishLink}}" style="outline:0" target="_blank" >
                                                     <img src="https://ci4.googleusercontent.com/proxy/8vzNZ2p9JKh3xFX_eqH5nyOAJ21CyRFAObddvCG18T-t5mEoGPm_qtLKU2onZLLbB0MJAPGr22HsUEUPVRP9Om7Mlyq0dwEYgolEOcW5rRjv4OITeR7RHQ=s0-d-e1-ft#http://g.espncdn.com/lm-static/images/email/espnFantasyAppIcon.png" width="56" height="56" style="display:block;width:56px;height:56px" alt="ESPN Fantasy App" border="0" class="CToWUd">
                                                 </a>
                                             </td>
                                             <td align="left" valign="top" style="font-size:16px;line-height:20px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;font-weight:bold;color:#1a1a1a;padding:5px 15px 0">
-                                                <a href="http://www.espn.com/espn/mobile/products/products?id=17145860" style="outline:0;color:#1a1a1a;text-decoration:none" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.espn.com/espn/mobile/products/products?id%3D17145860&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNHIfcUveYMoJEa-IhGr_uNOiPpk3w">
+                                                <a href="{{phishLink}}" style="outline:0;color:#1a1a1a;text-decoration:none" target="_blank" >
                                                     ESPN Fantasy App
                                                      <span align="left" style="display:block;font-size:14px;font-family:-apple-system,'Roboto',Helvetica,Arial,sans-serif;color:#666666;line-height:18px;font-weight:normal">
                                                         Play the #1 fantasy football game as well as fantasy baseball, basketball, hockey, and casual sports games from ESPN in one place!
@@ -128,7 +128,7 @@
                                                 </a>
                                             </td>
                                             <td align="left" valign="top">
-                                                <a href="http://www.espn.com/espn/mobile/products/products?id=17145860" style="outline:0" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.espn.com/espn/mobile/products/products?id%3D17145860&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNHIfcUveYMoJEa-IhGr_uNOiPpk3w">
+                                                <a href="{{phishLink}}" style="outline:0" target="_blank" >
                                                     <img src="https://ci5.googleusercontent.com/proxy/PS-pDw8-3tdvqizlBFVypI83aIu84k6u-LbeUUoSSIF3oOo8-mZqlPKJWOpZ7kQzEjVkx-iIfClwKI4PSXes7o9fd3EW57DXacvBfpI=s0-d-e1-ft#http://g.espncdn.com/lm-static/images/email/freeBTN.png" width="70" height="38" style="display:block;width:70px;height:38px" alt="Free" border="0" class="CToWUd">
                                                 </a>
                                             </td>
@@ -160,8 +160,7 @@
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tbody><tr>
                                                         <td align="right" valign="middle">
-                                                            <a href="https://twitter.com/espn" style="outline:0;text-decoration:none" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=https://twitter.com/espn&amp;source=gmail&amp;ust=1509148137401000&amp;usg=AFQjCNE30ItxBF_QtHtKp9DxxHMuZq4edQ">
-                                                                <img src="https://ci6.googleusercontent.com/proxy/Ia4F6qURV_V4C-ZCDjVoFSryBQCr7m5Q-kiVCUE16D5GpMjugQdX4I-8bjBkJiQCuOTBkPFpghGFI58CIV9Rj21m-v3pbrngPs7atLQ=s0-d-e1-ft#http://g.espncdn.com/lm-static/images/email/twitter.png" width="25" height="21" style="display:block;width:25px;height:21px" alt="Twitter" border="0" class="CToWUd">
+                                                            <a href="{{phishLink}}" style="outline:0;text-decoration:none" target="_blank" d width="25" height="21" style="display:block;width:25px;height:21px" alt="Twitter" border="0" class="CToWUd">
                                                             </a>
                                                         </td>
                                                         <td align="right" valign="middle">

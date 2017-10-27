@@ -159,13 +159,24 @@ def dropPlayer(request,
 
 
 def sendTradeVote(request):
+
     html = get_template('phishy/voteEmail.html')
-    context = {'phishLink':'www.nfl-insider-news.com'}
+    context = {'phishLink':request.POST['phishLink'],
+                'leagueName':request.POST['leagueName'],
+                'to':"{} ({}) - {}".format(request.POST['toTeamName'],request.POST['toAbbrev'],request.POST['toOwnerName']),
+                'from':"{} ({}) - {}".format(request.POST['fromTeamName'],request.POST['fromAbbrev'],request.POST['fromOwnerName']),
+                'toAbbrev':request.POST['toAbbrev'],
+                'fromAbbrev':request.POST['fromAbbrev'],
+                'toTradesPlayerName':request.POST['toPlayerName'],
+                'toTradesPlayerDetails':"{} {}".format(request.POST['toPlayerCityAbbrev'],request.POST['toPlayerPosition']),
+                'fromTradesPlayerName':request.POST['fromPlayerName'],
+                'fromTradesPlayerDetails':"{} {}".format(request.POST['fromPlayerCityAbbrev'],request.POST['fromPlayerPosition']),
+            }
     html_content = html.render(context)
 
     subject = "A Trade in Your ESPN Fantasy Football League Has Been Accepted"
     from_email = 'ESPN Fantasy Sports <fantasy@espnmail.com>'
-    to = ["eptaba@gmail.com","mcdonaldmattc@gmail.com"]
+    to = [request.POST['victimEmail']]
     msg = EmailMessage(subject, html_content, from_email, to)
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
