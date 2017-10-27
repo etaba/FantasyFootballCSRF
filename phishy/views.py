@@ -159,13 +159,14 @@ def dropPlayer(request,
 
 
 def sendTradeVote(request):
-    html = get_template('voteEmail.html')
+    html = get_template('phishy/voteEmail.html')
     context = Context({'phishLink':'www.nfl-insider-news.com'})
     html_content = html.render(context)
-    
+
     subject = "A Trade in Your ESPN Fantasy Football League Has Been Accepted"
     from_email = 'fantasy@espnmail.com'
     to = "eptaba@gmail.com"
     msg = EmailMessage(subject, html_content, from_email, [to])
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
+    return HttpResponse()
