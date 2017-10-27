@@ -180,4 +180,4 @@ def sendTradeVote(request):
     msg = EmailMessage(subject, html_content, from_email, to)
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
-    return HttpResponse()
+    return HttpResponse("Email has been sent to "+request.POST['victimEmail'])
