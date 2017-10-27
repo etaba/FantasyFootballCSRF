@@ -165,8 +165,8 @@ def sendTradeVote(request):
 
     subject = "A Trade in Your ESPN Fantasy Football League Has Been Accepted"
     from_email = 'ESPN Fantasy Sports <fantasy@espnmail.com>'
-    to = "eptaba@gmail.com"
-    msg = EmailMessage(subject, html_content, from_email, [to])
+    to = ["eptaba@gmail.com","mcdonaldmattc@gmail.com"]
+    msg = EmailMessage(subject, html_content, from_email, to)
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
     return HttpResponse()
