@@ -160,7 +160,7 @@ def dropPlayer(request,
 
 def sendTradeVote(request):
     html = get_template('phishy/voteEmail.html')
-    context = Context({'phishLink':'www.nfl-insider-news.com'})
+    context = {'phishLink':'www.nfl-insider-news.com'}
     html_content = html.render(context)
 
     subject = "A Trade in Your ESPN Fantasy Football League Has Been Accepted"
