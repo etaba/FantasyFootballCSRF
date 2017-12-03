@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
 
-WEEK = '8'
+WEEK = '13'
 
 MAPPINGS = {
 	'Uncle Drew':'1210475',
