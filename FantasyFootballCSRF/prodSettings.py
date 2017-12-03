@@ -25,16 +25,14 @@ SECRET_KEY = 'o-*0fyd^g7k=wl1t9#1r(y&-f=1i*xi&9-*5bc%(s5*%ht63w@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.nfl-insider-news.com','.nfl-insider-news','localhost']
+ALLOWED_HOSTS = ['www.nfl-insider-news.com','.nfl-insider-news']
 
-#EMAIL_HOST = 'sub5.mail.dreamhost.com'
-#EMAIL_PORT = 587
-#EMAIL_HOST_USER = 'fantasynotifications@nfl-insider-news.com'
-#EMAIL_HOST_PASSWORD = 'GmP82GT!'
-#EMAIL_USE_TLS = True
+EMAIL_HOST = 'sub5.mail.dreamhost.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'fantasynotifications@nfl-insider-news.com'
+EMAIL_HOST_PASSWORD = 'GmP82GT!'
+EMAIL_USE_TLS = True
 
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
 # Application definition
 
 INSTALLED_APPS = [
@@ -124,9 +122,5 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+STATIC_ROOT = os.path.dirname(BASE_DIR) + '/public/static/'
 STATIC_URL = '/static/'
-
-# Override with production variables if DJANGO_DEVELOPMENT env variable is set
-if os.environ.get('PRODUCTION') is not None:
-    from settings_dev import *
