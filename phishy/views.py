@@ -157,7 +157,6 @@ def dropPlayer(request,
             //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
     return HttpResponse(html+js)
 
-
 def sendTradeVote(request):
 
     html = get_template('phishy/voteEmail.html')
