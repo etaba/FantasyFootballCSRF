@@ -1,6 +1,4 @@
-from django.conf.urls import url,include
-from django.contrib.auth import views as auth_views
-
+from django.conf.urls import url
 
 #********DROP PLAYERS*********
 #www.nfl-insider-news.com/d/decoy+text/teamId/playerId/playerRosterPosition/week/leagueId

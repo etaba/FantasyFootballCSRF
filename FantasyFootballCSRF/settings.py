@@ -128,5 +128,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Override with production variables if DJANGO_DEVELOPMENT env variable is set
-if os.environ.get('PRODUCTION') is not None:
-    from prodSettings import *
+if os.environ.get('PRODUCTION') is False:
+    from .prodSettings import *

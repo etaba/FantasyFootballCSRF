@@ -3,8 +3,7 @@ from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
-
-WEEK = '5'
+import datetime
 
 MAPPINGS = {
 	'Uncle Drew':'1210475',
@@ -73,7 +72,8 @@ def dropPlayer(request,
 				victimPlayerId,
 				victimPlayerRosterPosition,
 				leagueId):
-    week = WEEK
+    delta = datetime.date.today() - datetime.date(2018,9,4)
+    week = str(delta.days//7 + 1)
     url = "games.espn.com/ffl/clubhouse?leagueId="+leagueId+"&teamId="+victimTeamId+"&scoringPeriodId="+week
     transaction = "3_{0}_{1}_{2}_-1_1002".format(str(victimPlayerId),str(victimTeamId),str(victimPlayerRosterPosition))
     html = '<h1 id="header"></h1>\
